@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/bottom_main"
+              android:layout_width="match_parent"
+              android:layout_height="55dp"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/id_tab_channel"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_channel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/ic_navi_channel_normal_dark"
+            />
+
+        <TextView
+            android:id="@+id/txt_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="频道"
+            android:textColor="@color/colorTabTextNormal"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_subscribe"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_subscribe_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/ic_navi_sub_normal_dark"
+            />
+
+        <TextView
+            android:id="@+id/txt_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="订阅"
+
+            android:textColor="@color/colorTabTextNormal"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_discover"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_discover_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/ic_new_navi_discover_normal_dark"
+            />
+
+        <TextView
+            android:id="@+id/txt_discover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发现"
+            android:textColor="@color/colorTabTextNormal"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_mine"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_mine_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/ic_navi_profile_normal_dark"
+            />
+
+        <TextView
+            android:id="@+id/txt_mine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的"
+            android:textColor="@color/colorTabTextNormal"
+
+            />
+    </LinearLayout>
+
+</LinearLayout>
