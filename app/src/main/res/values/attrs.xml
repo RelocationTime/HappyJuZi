@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MaxWidthBehavior_Params">300</declare-styleable>
+    <declare-styleable name="MaxWidthBehavior_Params_behavior_maxWidth">222</declare-styleable>
+</resources>
