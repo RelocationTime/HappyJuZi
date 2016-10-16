@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tool="http://schemas.android.com/tools">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:id="@+id/appbar"
+        android:layout_height="200dp">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            android:layout_height="match_parent">
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:layout_width="match_parent"
+                android:id="@+id/in_img"
+                app:layout_collapseMode="parallax"
+                fresco:placeholderImage="@drawable/ic_pic_default_loading_new"
+                fresco:placeholderImageScaleType="fitXY"
+                android:layout_height="200dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                tool:text="时尚"
+                android:textStyle="bold"
+                android:id="@+id/info_cata_name"
+                android:padding="1dp"
+                android:gravity="right|bottom"
+                android:background="@drawable/type_bg_share"
+                android:layout_gravity="right|top"
+                android:textColor="#fff"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="match_parent">
+        <include layout="@layout/recommend_info_content"/>
+    </android.support.v4.widget.NestedScrollView>
+    <ImageView
+        android:layout_width="30dp"
+        android:id="@+id/btn_back"
+        android:visibility="invisible"
+        android:elevation="10dp"
+        android:src="@mipmap/article_detail_back"
+        android:layout_height="30dp"/>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:id="@+id/loading"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:background="#444"
+            android:layout_height="0.5dp"/>
+        <RelativeLayout
+            android:background="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <EditText
+                android:hint="发弹幕 .. "
+                android:layout_width="100dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/tanmu"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:id="@+id/piao"
+                android:clickable="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/tanmu"
+                android:src="@mipmap/danmu_open"
+                android:layout_height="30dp"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/piao"
+                android:src="@mipmap/ic_star_like"
+                android:layout_height="30dp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_gravity="bottom|right"
+        android:elevation="20dp"
+        android:src="@mipmap/article_share"
+        android:layout_height="100dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:elevation="55dp"
+        android:id="@+id/tanmucontaier"
+        android:layout_height="match_parent"></RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

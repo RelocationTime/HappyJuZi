@@ -1,5 +1,6 @@
 package com.pro.happyjuzi.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,15 +9,19 @@ import android.os.Message;
 import android.support.v4.util.Pools;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -26,7 +31,7 @@ import com.pro.happyjuzi.bean.BaseBean;
 import com.pro.happyjuzi.bean.InfoBean;
 import com.pro.happyjuzi.bean.LuBean;
 import com.pro.happyjuzi.bean.ReBean;
-import com.pro.happyjuzi.channel.Not_InterestActivity;
+import com.pro.happyjuzi.detail.RecommendDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -86,18 +91,28 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        BaseBean bean = list.get(position);
-        MyViewHolder viewHolder = (MyViewHolder) holder;
+        final BaseBean bean = list.get(position);
+        final MyViewHolder viewHolder = (MyViewHolder) holder;
 
         if (bean instanceof InfoBean) {
             header_init((MyViewHolder) holder, (InfoBean) bean, viewHolder);
             return;
         } else {
             if (bean instanceof ReBean) {
-                ReBean reBean = (ReBean) bean;
-                if ((reBean.getType() == 0 || reBean.getType() == 6) && reBean.getDisplay() == 0) {
-                    if (reBean != null && reBean.getCat() != null) {
 
+                final ReBean reBean = (ReBean) bean;
+                if ((reBean.getType() == 0 || reBean.getType() == 6) && reBean.getDisplay() == 0) {
+                    View rl = (View) ((MyViewHolder) holder).re_title.getParent();
+                    rl.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, RecommendDetailActivity.class);
+                            intent.putExtra("id", reBean.getId());
+                            context.startActivity(intent);
+
+                        }
+                    });
+                    if (reBean != null && reBean.getCat() != null) {
                         viewHolder.re_title.setText(reBean.getTitle());
                         viewHolder.re_cat.setText(""+ reBean.getCat().getName());
                         if (reBean.getCat().getIcon() != null) {
@@ -116,8 +131,10 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         viewHolder.re_del.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-//                            notifyItemRemoved(position);
-                                Toast.makeText(context, "test lr ", Toast.LENGTH_SHORT).show();
+                                View view = (View) v.getParent().getParent().getParent().getParent();
+                                int layoutPosition = recyclerView.getChildLayoutPosition(view);
+                                createDialog(layoutPosition);
+
                             }
                         });
                     }
@@ -131,16 +148,27 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         }
                     }
 
-
                     if (reBean.getPic() != null) {
                         viewHolder.re_ud_pic.setImageURI(reBean.getPic());
                     }
+
+                    ((View) viewHolder.re_ud_title.getParent().getParent()).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, RecommendDetailActivity.class);
+                            intent.putExtra("id", reBean.getId());
+                            context.startActivity(intent);
+                        }
+                    });
                     viewHolder.re_ud_readnum.setText(reBean.getReadnum()+"");
                     viewHolder.re_ud_title.setText(reBean.getTitle()+"");
                     viewHolder.ud_del.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, Not_InterestActivity.class));
+                            View view = (View) v.getParent().getParent().getParent();
+                            int layoutPosition = recyclerView.getChildLayoutPosition(view);
+                            createDialog(layoutPosition);
+
                         }
                     });
                     return;
@@ -149,6 +177,45 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+
+
+
+    private void createDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.activity_not__interest, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        Window window = dialog.getWindow();
+        window.setWindowAnimations(R.style.MyDialog);
+        Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        WindowManager.LayoutParams params = window.getAttributes();
+        dialog.setCanceledOnTouchOutside(false);
+
+        view.findViewById(R.id.de_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "onClick: " + position );
+                list.remove(position);
+                notifyItemRemoved(position);
+                dialog.cancel();
+            }
+        });
+
+        view.findViewById(R.id.de_no).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+    public void removePosition(int prePosition) {
+        list.remove(prePosition);
+        notifyItemRemoved(prePosition);
+    }
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
@@ -163,7 +230,8 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void header_init(final MyViewHolder holder, InfoBean bean, MyViewHolder viewHolder) {
         final List<ImageView> imageViews = new ArrayList<ImageView>();
-        InfoBean infoBean = bean;
+
+        final InfoBean infoBean = bean;
         List<LuBean> Lulist = infoBean.getInfo();
         viewpager = holder.viewpager;
         holder.ll_point_group.removeAllViews();
@@ -226,6 +294,9 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int item = Integer.MAX_VALUE/2 - Integer.MAX_VALUE/2%imageViews.size();
         holder.viewpager.setCurrentItem(item);
         holder.tv_title.setText(imageDesc.get(prePosition));
+        if (picUrl != null && picUrl.size() == 1) {
+            handler.removeCallbacksAndMessages(null);
+        }
         handler.sendEmptyMessageDelayed(0,3000);
         viewHolder.viewpager.setOffscreenPageLimit(5);
         viewpager.setOffscreenPageLimit(5);
@@ -275,7 +346,10 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     public void onClick(View v) {
                         int position = (int) v.getTag()%imageViews.size();
                         String text = imageDesc.get(position);
-                        Toast.makeText(context, "text=="+text, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, RecommendDetailActivity.class);
+                        intent.putExtra("id", infoBean.getInfo().get(position).getId());
+                        context.startActivity(intent);
+
                     }
                 });
                 return imageView;

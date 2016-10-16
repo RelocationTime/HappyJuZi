@@ -1,6 +1,8 @@
 package com.pro.happyjuzi.channel;
 
+import com.pro.happyjuzi.bean.DetailBean;
 import com.pro.happyjuzi.bean.ResponseRecommBean;
+import com.pro.happyjuzi.bean.TanmuBean;
 import com.pro.happyjuzi.utils.NetUtils;
 
 import retrofit2.Call;
@@ -15,6 +17,11 @@ public class RecomendListModel {
     public Call<ResponseRecommBean> getRecommendData(int page) {
         RecommendServer server = NetUtils.getApi(RecommendServer.class);
         return server.getRespnoseRecommendData(page);
+    }
+
+    public Call<TanmuBean> getRecommendTanmu(int id) {
+        RecommendServer server = NetUtils.getApi(RecommendServer.class);
+        return server.getRecommendTanmu(id);
     }
 
     public Call<ResponseRecommBean> getGossipData(int page) {
@@ -37,5 +44,9 @@ public class RecomendListModel {
     }
 
 
+    public Call<DetailBean> getDetailInfo(int id) {
+        RecommendServer server = NetUtils.getApi(RecommendServer.class);
+        return server.getRecommendDetails(id);
+    }
 
 }

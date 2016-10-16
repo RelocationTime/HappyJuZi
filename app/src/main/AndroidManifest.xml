@@ -21,7 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".channel.Not_InterestActivity" android:theme="@style/Animation.AppCompat.Dialog">
+        <activity
+            android:name=".channel.Not_InterestActivity"
+            android:theme="@style/Animation.AppCompat.Dialog">
+        </activity>
+        <activity android:name=".detail.RecommendDetailActivity">
         </activity>
     </application>
 

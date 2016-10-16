@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+                android:oneshot="false">
+    <item android:drawable="@drawable/gif_load_dark_1" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_2" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_3" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_4" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_5" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_6" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_7" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_8" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_9" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_10" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_11" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_12" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_13" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_14" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_15" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_16" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_17" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_18" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_19" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_19" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_19" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_19" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_20" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_21" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_22" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_23" android:duration="100"/>
+    <item android:drawable="@drawable/gif_load_dark_24" android:duration="100"/>
+
+</animation-list>

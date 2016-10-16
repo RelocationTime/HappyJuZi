@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tool="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:id="@+id/content_image_string"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:maxLines="2"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:id="@+id/info_title"
+        android:padding="10dp"
+        tools:text="乔任梁：愿你在天堂生日快乐 ，并且继续任意时尚"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/info_author_username"
+            tools:text="Millet-橘子编辑"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            tools:text="10小时前"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/info_publish_time"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/contents"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

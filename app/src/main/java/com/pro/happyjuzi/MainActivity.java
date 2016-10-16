@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabMine = (LinearLayout) findViewById(R.id.id_tab_mine);
         mTabDiscover = (LinearLayout) findViewById(R.id.id_tab_discover);
         mTabSubject = (LinearLayout) findViewById(R.id.id_tab_subscribe);
-
         mImgChannel = (ImageButton) mTabChannel.findViewById(R.id.id_tab_channel_img);
         mImgDicover = (ImageButton) mTabDiscover.findViewById(R.id.id_tab_discover_img);
         mImgMine = (ImageButton) mTabMine.findViewById(R.id.id_tab_mine_img);

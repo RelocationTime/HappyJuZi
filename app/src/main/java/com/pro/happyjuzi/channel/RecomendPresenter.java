@@ -3,12 +3,16 @@ package com.pro.happyjuzi.channel;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.pro.happyjuzi.bean.BaseBean;
+import com.pro.happyjuzi.bean.DetailBean;
 import com.pro.happyjuzi.bean.InfoBean;
 import com.pro.happyjuzi.bean.LuBean;
 import com.pro.happyjuzi.bean.ReBean;
 import com.pro.happyjuzi.bean.ResponseRecommBean;
+import com.pro.happyjuzi.bean.TanmuBean;
+import com.pro.happyjuzi.detail.IDetailView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +28,89 @@ import retrofit2.Response;
 public class RecomendPresenter {
 
     private IRecommendView view;
-    private RecomendListModel model;
+    private RecomendListModel model = new RecomendListModel();
     public Context context;
-
+    public IDetailView detailView;
     public RecomendPresenter(IRecommendView view,Context context) {
         this.view = view;
         this.context = context;
-        model = new RecomendListModel();
+    }
+
+    public RecomendPresenter(IDetailView info_view, Context context) {
+        this.detailView = info_view;
+        this.context = context;
+    }
+
+    public void getTanmu(int id) {
+        Call<TanmuBean> call = model.getRecommendTanmu(id);
+        call.enqueue(new Callback<TanmuBean>() {
+            @Override
+            public void onResponse(Call<TanmuBean> call, Response<TanmuBean> response) {
+                TanmuBean.DataBean data = response.body().getData();
+                if (data != null) {
+                    List<TanmuBean.DataBean.ListBean> list = data.getList();
+                    if (list != null) {
+                        for (int i = 0; i < list.size(); i++) {
+                            Log.e(TAG, "onResponse: " + list.get(i).getContent() );
+                        }
+                        detailView.showTanmu(list);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TanmuBean> call, Throwable t) {
+
+            }
+        });
+    }
+    private static final String TAG = "RecomendPresenter";
+    public void getDetailInfo(int id) {
+        Call<DetailBean> call = model.getDetailInfo(id);
+        detailView.showAnimaotion();
+        call.enqueue(new Callback<DetailBean>() {
+            @Override
+            public void onResponse(Call<DetailBean> call, Response<DetailBean> response) {
+                DetailBean body = response.body();
+                DetailBean.DataBean bean = body.getData();
+                if (bean != null) {
+                    DetailBean.DataBean.InfoBean info = bean.getInfo();
+                    detailView.hideAnimation();
+                    getDetailTask(info);
+                    String contents = body.getData().getContents();
+                    ArrayList<String> titles = new ArrayList<>();
+                    String[] split = contents.split("-->");
+                    for (int i = 0 ; i < split.length; i++) {
+                        titles.add(split[i]);
+                    }
+                    List<DetailBean.DataBean.ResourcesBean.IMGBean> imgBeanList = body.getData().getResources().getIMG();
+                    detailView.showDetail_content(titles,imgBeanList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DetailBean> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void getDetailTask(DetailBean.DataBean.InfoBean info) {
+        if (info.getAuthor() != null) {
+            detailView.showDetail_info_author_username(info.getAuthor().getUsername()+"");
+        }
+
+        if (info.getCat() != null) {
+            detailView.showDetail_info_cata_name(info.getCat().getName());
+        }
+
+        detailView.showDetail_info_in_im(info.getImg());
+        detailView.showDetail_info_publish_time(info.getPublish_time());
+        detailView.showDetail_info_title(info.getTitle());
+        detailView.showDetail_title(info.getTxtlead());
     }
 
     public void  getLoadMore(int time) {

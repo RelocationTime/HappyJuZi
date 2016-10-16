@@ -14,9 +14,6 @@ public class FashionFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-
-
-
     @Override
     public void selectTypeRecommen() {
         presenter.start(1,CAT_FASHION);
