@@ -1,5 +1,6 @@
 package com.pro.happyjuzi.channel;
 
+import com.pro.happyjuzi.bean.AuthorBeanInfo;
 import com.pro.happyjuzi.bean.DetailBean;
 import com.pro.happyjuzi.bean.ResponseRecommBean;
 import com.pro.happyjuzi.bean.TanmuBean;
@@ -34,6 +35,11 @@ public class RecomendListModel {
         return server.getVideoRecommendData(page);
     }
 
+    public Call<AuthorBeanInfo> getRecommendAuthro(int id) {
+        RecommendServer server = NetUtils.getApi(RecommendServer.class);
+        Call<AuthorBeanInfo> call = server.getRecommendAuthor(id);
+        return call;
+    }
     public Call<ResponseRecommBean> getFashionData(int page) {
         RecommendServer server = NetUtils.getApi(RecommendServer.class);
         return server.getFashionRecommendData(page);

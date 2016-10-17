@@ -7,7 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="dialogWindowAnim" parent="@android:style/Theme.Dialog" mce_bogus="1">
+
+    <style name="dialogWindowAnim" mce_bogus="1" parent="@android:style/Theme.Dialog">
         <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
         <item name="android:windowFrame">@null</item>
@@ -18,6 +19,7 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowBackground">@null</item><!--除去背景色-->
     </style>
+
     <style name="MyDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item> <!--Dialog的windowFrame框为无-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
@@ -31,7 +33,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

@@ -1,5 +1,7 @@
 package com.pro.happyjuzi.detail;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +9,9 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -31,6 +35,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static com.pro.happyjuzi.R.id.info_author_username;
@@ -57,6 +62,8 @@ public class RecommendDetailActivity extends AppCompatActivity implements IDetai
 
     //父组件的高度
     private int validHeightSpace;
+    public View startTanmuView;
+    public int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +78,13 @@ public class RecommendDetailActivity extends AppCompatActivity implements IDetai
         tanmuBean = new TanmuBean();
 
         handler = new MyHandler(this);
-        View startTanmuView = findViewById(R.id.piao);
+        startTanmuView = findViewById(R.id.piao);
         startTanmuView.setOnClickListener(this);
     }
 
     private void initView() {
         author_username = ((TextView) findViewById(info_author_username));
+        author_username.setOnClickListener(this);
         cata_name = (TextView) findViewById(R.id.info_cata_name);
         publish_time = (TextView) findViewById(info_publish_time);
         info_title = (TextView) findViewById(R.id.info_title);
@@ -88,6 +96,11 @@ public class RecommendDetailActivity extends AppCompatActivity implements IDetai
     @Override
     public void showDetail_title(String title) {
         info_title.setText(title+"");
+    }
+
+    @Override
+    public void showAuthorID(int id) {
+        this.id = id;
     }
 
     @Override
@@ -183,21 +196,36 @@ public class RecommendDetailActivity extends AppCompatActivity implements IDetai
 
     @Override
     public void onClick(View v) {
-        if (containerVG.getChildCount() > 0) {
-            return;
+        switch (v.getId()) {
+            case R.id.piao:
+            {
+                if (containerVG.getChildCount() > 0) {
+                    return;
+                }
+
+                existMarginValues.clear();
+                new Thread(new CreateTanmuThread()).start();
+            }
+                break;
+            case R.id.info_author_username:
+                Intent user = new Intent(this, UserInfoActivity.class);
+                user.putExtra("id", id);
+                startActivity(user);
+                break;
         }
 
-        existMarginValues.clear();
-        new Thread(new CreateTanmuThread()).start();
     }
 
     private class CreateTanmuThread implements Runnable {
         @Override
         public void run() {
-            int N = tanmuBean.getItems().length;
-            for (int i = 0; i < N; i++) {
-                handler.obtainMessage(1, i, 0).sendToTarget();
-                SystemClock.sleep(2000);
+            if (tanmuBean != null) {
+                int N = tanmuBean.getItems().length;
+                for (int i = 0; i < N; i++) {
+                    handler.obtainMessage(1, i, 0).sendToTarget();
+                    SystemClock.sleep(2000);
+                }
+
             }
         }
     }
@@ -222,27 +250,31 @@ public class RecommendDetailActivity extends AppCompatActivity implements IDetai
                     float textSize = (float) (ac.tanmuBean.getMinTextSize() * (1 + Math.random() * ac.tanmuBean.getRange()));
                     int textColor = ac.tanmuBean.getColor();
 
-                    ac.showTanmu(content, textSize, textColor);
+                    Log.e(TAG, "handleMessage: "+ textColor);
+                    ac.showTanmu(content, textSize, Color.RED);
                 }
             }
         }
     }
 
+    private static final String TAG = "RecommendDetailActivity";
     private void showTanmu(String content, float textSize, int textColor) {
-        final TextView textView = new TextView(this);
-
-        textView.setTextSize(textSize);
+        final TextView textView = (TextView) LayoutInflater.from(this).inflate(R.layout.tanmu_tx, containerVG, false);
+        //textView.setTextSize(textSize);
         textView.setText(content);
 //        textView.setSingleLine();
-        textView.setTextColor(textColor);
+        int color = (int) (Math.random() * 250);
+        Random random = new Random();
+        int ranColor = 0xff000000 | random.nextInt(0x00ffffff);
+        textView.setTextColor(ranColor);
         //textView.setBackgroundColor(textColor-10);
-        textView.setPadding(3,3,3,3);
+      //  textView.setPadding(3,3,3,3);
         int leftMargin = containerVG.getRight() - containerVG.getLeft() - containerVG.getPaddingLeft();
         //计算本条弹幕的topMargin(随机值，但是与屏幕中已有的不重复)
         int verticalMargin = getRandomTopMargin();
         textView.setTag(verticalMargin);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         params.topMargin = verticalMargin;
         textView.setLayoutParams(params);

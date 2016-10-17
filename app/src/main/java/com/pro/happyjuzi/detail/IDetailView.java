@@ -14,6 +14,7 @@ public interface IDetailView {
 
     void showDetail_title(String title);
 
+    void showAuthorID(int id);
     void showDetail_info_cata_name(String cataName);
 
     void showDetail_info_in_im(String image_url);

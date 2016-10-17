@@ -158,6 +158,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             Intent intent = new Intent(context, RecommendDetailActivity.class);
                             intent.putExtra("id", reBean.getId());
                             context.startActivity(intent);
+
                         }
                     });
                     viewHolder.re_ud_readnum.setText(reBean.getReadnum()+"");
@@ -186,7 +187,7 @@ public class ChannelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         Window window = dialog.getWindow();
-        window.setWindowAnimations(R.style.MyDialog);
+        window.setWindowAnimations(R.style.dialogWindowAnim);
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         WindowManager.LayoutParams params = window.getAttributes();
         dialog.setCanceledOnTouchOutside(false);

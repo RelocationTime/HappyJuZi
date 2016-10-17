@@ -104,6 +104,7 @@
         android:elevation="20dp"
         android:src="@mipmap/article_share"
         android:layout_height="100dp"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:elevation="55dp"

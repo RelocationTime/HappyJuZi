@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.pro.happyjuzi.bean.AuthorBeanInfo;
 import com.pro.happyjuzi.bean.BaseBean;
 import com.pro.happyjuzi.bean.DetailBean;
 import com.pro.happyjuzi.bean.InfoBean;
@@ -12,6 +13,7 @@ import com.pro.happyjuzi.bean.LuBean;
 import com.pro.happyjuzi.bean.ReBean;
 import com.pro.happyjuzi.bean.ResponseRecommBean;
 import com.pro.happyjuzi.bean.TanmuBean;
+import com.pro.happyjuzi.detail.IAuthorView;
 import com.pro.happyjuzi.detail.IDetailView;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class RecomendPresenter {
     private RecomendListModel model = new RecomendListModel();
     public Context context;
     public IDetailView detailView;
+    public IAuthorView authorView;
     public RecomendPresenter(IRecommendView view,Context context) {
         this.view = view;
         this.context = context;
@@ -41,6 +44,42 @@ public class RecomendPresenter {
         this.context = context;
     }
 
+    public RecomendPresenter(IAuthorView authorView, Context context) {
+        this.authorView = authorView;
+        this.context = context;
+    }
+    public void getAuthor(int id) {
+        Call<AuthorBeanInfo> call = model.getRecommendAuthro(id);
+        if (call != null) {
+            call.enqueue(new Callback<AuthorBeanInfo>() {
+                @Override
+                public void onResponse(Call<AuthorBeanInfo> call, Response<AuthorBeanInfo> response) {
+                    if (response.isSuccessful()) {
+                        AuthorBeanInfo body = response.body();
+                        AuthorBeanInfo.DataBean data = body.getData();
+                        List<AuthorBeanInfo.DataBean.ListBean> listBeen = data.getList();
+                        AuthorBeanInfo.DataBean.InfoBean dataInfo = data.getInfo();
+                        if (listBeen != null) {
+                            authorView.showDataList(dataInfo);
+                        }
+
+                        if (dataInfo != null) {
+                            authorView.showAuthor(listBeen);
+                        }
+
+                        if (dataInfo.getImg() != null) {
+                            authorView.showBackground(dataInfo.getImg());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AuthorBeanInfo> call, Throwable t) {
+
+                }
+            });
+        }
+    }
     public void getTanmu(int id) {
         Call<TanmuBean> call = model.getRecommendTanmu(id);
         call.enqueue(new Callback<TanmuBean>() {
@@ -84,6 +123,9 @@ public class RecomendPresenter {
                     String[] split = contents.split("-->");
                     for (int i = 0 ; i < split.length; i++) {
                         titles.add(split[i]);
+                    }
+                    if (info.getAuthor() != null) {
+                        detailView.showAuthorID(info.getAuthor().getId());
                     }
                     List<DetailBean.DataBean.ResourcesBean.IMGBean> imgBeanList = body.getData().getResources().getIMG();
                     detailView.showDetail_content(titles,imgBeanList);
