@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.pro.happyjuzi">
-
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -32,6 +31,7 @@
             android:label="@string/title_activity_user_info"
             android:theme="@style/AppTheme">
         </activity>
+
     </application>
 
 </manifest>
