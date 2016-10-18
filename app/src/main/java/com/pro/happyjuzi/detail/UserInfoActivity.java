@@ -3,7 +3,11 @@ package com.pro.happyjuzi.detail;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +16,17 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.DataSource;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.pro.happyjuzi.R;
 import com.pro.happyjuzi.adapter.UserInfoAdapter;
 import com.pro.happyjuzi.bean.AuthorBeanInfo;
@@ -36,6 +49,16 @@ public class UserInfoActivity extends AppCompatActivity implements AppBarLayout.
     public RelativeLayout bg;
     public MyImageViewHandler myImageViewHandler;
     public TextView info_title;
+
+    public Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            Bitmap bitmap = (Bitmap) msg.obj;
+            BitmapDrawable drawable = new BitmapDrawable(bitmap);
+            bg.setBackgroundDrawable(drawable);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +91,7 @@ public class UserInfoActivity extends AppCompatActivity implements AppBarLayout.
         int range = appbar.getTotalScrollRange();
         verticalOffset = ((int) Math.abs(verticalOffset));
         float v = (float) (verticalOffset / range);
+
         info_title.setTextColor(Color.argb((int)v*255,255,255,255));
     }
 
@@ -92,14 +116,29 @@ public class UserInfoActivity extends AppCompatActivity implements AppBarLayout.
             if (dataInfo.getImg() != null) {
                 header_icon.setImageURI(dataInfo.getImg());
             }
-
+            info_title.setText(dataInfo.getName());
         }
     }
 
     @Override
     public void showBackground(final String imageUrl) {
-        myImageViewHandler = new MyImageViewHandler(this, imageUrl);
-        myImageViewHandler.start();
+
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl)).setProgressiveRenderingEnabled(true).build();
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
+            @Override
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+
+                bitmap = blurImageAmeliorate(bitmap);
+                Message message = mHandler.obtainMessage();
+                message.obj = bitmap;
+                mHandler.sendMessage(message);
+            }
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+            }
+        }, CallerThreadExecutor.getInstance());
     }
 
     @Override
@@ -107,9 +146,68 @@ public class UserInfoActivity extends AppCompatActivity implements AppBarLayout.
         BitmapDrawable drawable = new BitmapDrawable(bitmap);
         bg.setBackgroundDrawable(drawable);
     }
+    public static Bitmap blurImageAmeliorate(Bitmap bmp)
+    {
+        long start = System.currentTimeMillis();
+        // 高斯矩阵
+        int[] gauss = new int[] { 1, 2, 1, 2, 4, 2, 1, 2, 1 };
 
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
+        int pixR = 0;
+        int pixG = 0;
+        int pixB = 0;
 
+        int pixColor = 0;
 
+        int newR = 0;
+        int newG = 0;
+        int newB = 0;
+        int delta = 35; // 值越小图片会越亮，越大则越暗
+        int idx = 0;
+        int[] pixels = new int[width * height];
+        bmp.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i = 1, length = height - 1; i < length; i++)
+        {
+            for (int k = 1, len = width - 1; k < len; k++)
+            {
+                idx = 0;
+                for (int m = -1; m <= 1; m++)
+                {
+                    for (int n = -1; n <= 1; n++)
+                    {
+                        pixColor = pixels[(i + m) * width + k + n];
+                        pixR = Color.red(pixColor);
+                        pixG = Color.green(pixColor);
+                        pixB = Color.blue(pixColor);
 
+                        newR = newR + (int) (pixR * gauss[idx]);
+                        newG = newG + (int) (pixG * gauss[idx]);
+                        newB = newB + (int) (pixB * gauss[idx]);
+                        idx++;
+                    }
+                }
+
+                newR /= delta;
+                newG /= delta;
+                newB /= delta;
+
+                newR = Math.min(255, Math.max(0, newR));
+                newG = Math.min(255, Math.max(0, newG));
+                newB = Math.min(255, Math.max(0, newB));
+
+                pixels[i * width + k] = Color.argb(255, newR, newG, newB);
+
+                newR = 0;
+                newG = 0;
+                newB = 0;
+            }
+        }
+
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        long end = System.currentTimeMillis();
+        return bitmap;
+    }
 }
